@@ -1,0 +1,14 @@
+{
+  "name": "postcatolyptica-ai",
+  "version": "1.0.0",
+  "description": "Search engine and core AI component of PostCATolyptica",
+  "main": "server.js",
+  "repository": "https://github.com/mikolasan/postcatolyptica",
+  "author": "Nikolay Neupokoev",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "natural": "^0.6.3",
+    "pos": "^0.4.2"
+  }
+}
