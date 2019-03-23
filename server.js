@@ -3,7 +3,7 @@ const Engine = require('./CatSearchEngine');
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const port = 3000;
+const port = 4000;
 
 const winston = require('winston');
 const logger = winston.createLogger({
@@ -38,7 +38,21 @@ let engine = new Engine((err, data) => {
   }
 })
 
-app.get('/search', cors(), (req, res) => {
+const origins = [
+  'https://postcatolyptica.herokuapp.com',
+  'http://localhost:3000'
+]
+
+const corsFunction = function(origin, callback) {
+  if (!origin) return callback(null, true);
+  if (origins.indexOf(origin) === -1) {
+    const msg = `cats do not like ${origin}`
+    return callback(new Error(msg), false);
+  }
+  return callback(null, true)
+}
+
+app.get('/search', cors({origin:corsFunction}), (req, res) => {
   const query = req.query.q
   if (query.length > 0 && engineReady) {
     let results = engine.search(query);
