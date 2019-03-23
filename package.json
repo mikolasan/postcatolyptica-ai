@@ -8,7 +8,10 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
     "natural": "^0.6.3",
-    "pos": "^0.4.2"
+    "pos": "^0.4.2",
+    "winston": "^3.2.1"
   }
 }

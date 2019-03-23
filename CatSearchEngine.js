@@ -1,17 +1,21 @@
-import Natural from 'natural';
-import Pos from 'pos';
-import Cats from './cats-db.json';
-import Synonyms from './synonyms.json';
+//vim :set ts=2 sw=2 sts=2 et :
 
-let tagger = new Pos.Tagger();
-let sentenceTokenizer  = new Natural.SentenceTokenizer();
-let wordTokenizer = new Natural.WordTokenizer();
-let TermFrequency = Natural.TfIdf; // Term Frequency–Inverse Document Frequency
-let termFrequency = new TermFrequency();
+'use strict'
+
+const Natural = require('natural');
+const Pos = require('pos');
+const cats = require('./cats-db');
+const synonyms = require('./synonyms');
 
 
-class CatSearchEngine {
+module.exports = class CatSearchEngine {
   constructor(callback) {
+    this.tagger = new Pos.Tagger();
+    this.sentenceTokenizer  = new Natural.SentenceTokenizer();
+    this.wordTokenizer = new Natural.WordTokenizer();
+    const TermFrequency = Natural.TfIdf; // Term Frequency–Inverse Document Frequency
+    this.termFrequency = new TermFrequency();
+
     this.prepareBase(callback);
   }
 
@@ -34,19 +38,20 @@ class CatSearchEngine {
 
   preProcessText() {
     var paragraphId = 0;
-    for (let [breed, details] of Object.values(Cats)) {
+    for (const breed in cats) {
+      const details = cats[breed]
       let paragraph = details.size + ". " + details.coat + ". " + details.color + ". " + details.description + details.did_you_know;
-      termFrequency.addDocument(paragraph);
-      Cats[breed].paragraphId = paragraphId;
-      Cats[breed].paragraph = paragraph;
-      let sentencesRaw = sentenceTokenizer.tokenize(paragraph);
-      Cats[breed].model = {};
-      Cats[breed].sentences = sentencesRaw.map(sentence => {
-        var words = wordTokenizer.tokenize(sentence);
-        var taggedSentence = tagger.tag(words);
+      this.termFrequency.addDocument(paragraph);
+      cats[breed].paragraphId = paragraphId;
+      cats[breed].paragraph = paragraph;
+      let sentencesRaw = this.sentenceTokenizer.tokenize(paragraph);
+      cats[breed].model = {};
+      cats[breed].sentences = sentencesRaw.map(sentence => {
+        var words = this.wordTokenizer.tokenize(sentence);
+        var taggedSentence = this.tagger.tag(words);
         var modelWords = this.extractModelWords(taggedSentence);
         modelWords.forEach(token => {
-          Cats[breed].model[token.word] = token;
+          cats[breed].model[token.word] = token;
         });
         return {
           text: sentence,
@@ -59,11 +64,11 @@ class CatSearchEngine {
   }
 
   weightTokens() {
-    for (let breed in Cats) {
-      let details = Cats[breed];
+    for (let breed in cats) {
+      let details = cats[breed];
       for (let word in details.model) {
-        details.model[word].weight = termFrequency.tfidf(word, details.paragraphId);
-        details.model[word].synonyms = Synonyms[word] || [];
+        details.model[word].weight = this.termFrequency.tfidf(word, details.paragraphId);
+        details.model[word].synonyms = synonyms[word] || [];
       }
     }
   }
@@ -115,11 +120,11 @@ class CatSearchEngine {
   }
 
   search(query) {
-    var queryWords = wordTokenizer.tokenize(query);
+    var queryWords = this.wordTokenizer.tokenize(query);
     var result = [];
-    for (let breed in Cats) {
+    for (let breed in cats) {
       let totalScore = 0;
-      let data = Cats[breed];
+      let data = cats[breed];
       let tokens = data.model;
       let spotlight = {score: 0, word: ""};
       for (let t in tokens) {
@@ -156,6 +161,5 @@ class CatSearchEngine {
     }
     return result.sort((a, b) => a.totalScore < b.totalScore).splice(0, 5);
   }
-}
+};
 
-export default CatSearchEngine;
