@@ -1,0 +1,3 @@
+[dev]
+functions = "src"
+functionsPort = 7000

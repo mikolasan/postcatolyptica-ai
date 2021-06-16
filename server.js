@@ -1,4 +1,4 @@
-const Engine = require('./CatSearchEngine');
+const Engine = require('./src/CatSearchEngine');
 
 const express = require('express');
 const cors = require('cors');

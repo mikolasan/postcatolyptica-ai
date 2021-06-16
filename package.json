@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Search engine and core AI component of PostCATolyptica",
   "main": "server.js",
-  "repository": "https://github.com/mikolasan/postcatolyptica",
+  "repository": "https://github.com/mikolasan/postcatolyptica-ai",
   "author": "Nikolay Neupokoev",
   "license": "MIT",
   "private": true,
