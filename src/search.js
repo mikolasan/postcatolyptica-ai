@@ -21,6 +21,9 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 400,
       body: 'Bad request',
+      headers: {
+        "access-control-allow-origin": "*"
+      }
     }
   }
 };
