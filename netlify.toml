@@ -1,6 +1,10 @@
 [dev]
   functions = "src"
   functionsPort = 7000
+[[headers]]
+  for = "/*"
+    [headers.values]
+    Access-Control-Allow-Origin = https://postcatolyptica.herokuapp.com/
 [[redirects]]
   from = '/api/*'
   to = '/.netlify/functions/:splat'
