@@ -4,8 +4,8 @@
 
 const Natural = require('natural');
 const Pos = require('pos');
-const cats = require('./cats-db');
-const synonyms = require('./synonyms');
+const cats = require('./cats-db.json');
+const synonyms = require('./synonyms.json');
 
 
 module.exports = class CatSearchEngine {
