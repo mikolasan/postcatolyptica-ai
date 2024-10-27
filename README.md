@@ -2,7 +2,7 @@
 
 Search engine and core AI component of PostCATolyptica
 
-Comes together with [a cute frontend](https://github.com/mikolasan/cat-bible/)
+Comes together with [a cute frontend](https://github.com/mikolasan/postcatolyptica)
 
 ## Install and start
 
